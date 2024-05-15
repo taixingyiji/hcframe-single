@@ -19,7 +19,7 @@ spring:
     druid:
       # 配置sqlite文件路径，需要填写绝对路径，推荐将sqlite文件放入到服务器上，而非程序jar包或war包中
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/GBCAS?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+      url: jdbc:mysql://localhost:3306/COMMON?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
       username: root
       password: root
 #      driver-class-name: dm.jdbc.driver.DmDriver
