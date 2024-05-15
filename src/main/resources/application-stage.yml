@@ -1,0 +1,98 @@
+spring:
+  redis:
+    database: 0
+    host: 192.168.2.76
+    port: 6379
+    password:
+    lettuce:
+      pool:
+        # 连接池中的最大空闲连接 默认8
+        max-idle: 8
+        # 连接池中的最小空闲连接 默认0
+        min-idle: 0
+        # 连接池最大连接数 默认8 ，负数表示没有限制
+        max-active: 200
+        # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认-1
+        max-wait: -1
+    timeout: 30000
+  rabbitmq:
+    host: 192.168.2.76
+    port: 5672
+    username: admin
+    password: admin
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        concurrency: 10 #消费者数量
+        max-concurrency: 10 #最大消费者数量
+        prefetch: 1 #限流（消费者每次从队列获取的消息数量）
+        auto-startup: true #启动时自动启动容器
+        acknowledge-mode: manual #开启ACK手动确认模式
+  datasource:
+    druid:
+      # 配置sqlite文件路径，需要填写绝对路径，推荐将sqlite文件放入到服务器上，而非程序jar包或war包中
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://192.168.2.76:3306/NFR?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+      #      url: jdbc:mysql://192.168.1.111:3306/NFR?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+      username: root
+      password: root
+      #使用Druid数据源
+      initialSize: 5
+      # 初始化大小，最小，最大
+      minIdle: 20
+      maxActive: 1000
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 1
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,slf4j
+      filter:
+        stat:
+          merge-sql: false
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.slowSqlMillis=5000
+# 区块链配置
+repchain:
+  # 区块链地址
+  host: 192.168.2.76:9081
+  #  host: 192.168.1.167:9081
+  # 需要同步的区块初始高度
+  blockHeight: 0
+  # 撮合周期（分钟）
+  contractPeriod: 5
+  # 合同运行周期
+  contractCron: 30 */${repchain.contractPeriod} * * * ?
+  dealIdCron: 0 */${repchain.contractPeriod} * * * ?
+pay-info:
+  host: http://159.226.5.116:443
+  # 中金日志路径
+  system-path: /root/test_config/system/log4j.xml
+#  system-path: /Volumes/DATA/dev_soft/cn_config/system/log4j.xml
+  #  system-path: /Volumes/DATA/dev_soft/test_config/system/log4j.xml
+  # 中金支付证书配置路径
+  payment-path: /root/test_config/payment
+#  payment-path: /Volumes/DATA/dev_soft/cn_config/payment
+  #  payment-path: /Volumes/DATA/dev_soft/test_config/payment
+  # 订单超时取消时间
+  order-time-out: 30
+  # 支付超时取消时间(分钟)，5~120分钟
+  pay-time-out: "5"
+  # 回调地址
+  pay-callback: ${pay-info.host}/payment/payCallback
+  pay-success-url: ${pay-info.host}/payment/payCallback
+  pay-cancel-url: ${pay-info.host}/payment/payCallback
+  pay-cancel-web-url:  ${pay-info.host}/payment/payCallback
+file:
+  path: /root/img/
+  herf: http://192.168.2.76:89/img/
+
+
+

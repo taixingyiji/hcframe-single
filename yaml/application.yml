@@ -1,0 +1,96 @@
+server:
+  port: 9094
+  servlet:
+    context-path: /
+  tomcat:
+    threads:
+      max: 1500
+      min-spare: 100
+    accept-count: 2000
+pagehelper:
+  auto-runtime-dialect: true
+# 单应用CAS配置
+#cas:
+#  server-url-prefix: http://localhost:8080/cas
+#  server-login-url: http://localhost:8080/cas/login
+#  client-host-url: http://localhost:9094
+#  validation-type: CAS3
+# 微服务CAS配置
+#cas:
+#  server-url-prefix: @cas.cas-service-url@@cas.cas-context-path@
+#  client-host-url: http://192.168.1.130:8080
+#  validation-type: cas3
+#  server-login-url: @cas.cas-service-url@/cas@cas.login-url@
+#  accept-any-proxy: true
+#  redirect-after-validation: false
+#  spring.servlet.multipart.max-file-size = 5MB
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+  profiles:
+    active: prod
+  application:
+    name: cloud-user
+  # 缓存设置
+  cache:
+    #     redis缓存
+    #    type: redis
+    #    redis:
+    #      time-to-live: 1d
+    #      use-key-prefix: true
+    #      cache-null-values: true
+    #      key-prefix: cache.
+    #    # ehcache缓存
+    type: ehcache
+    ehcache:
+      config: classpath:ehcache.xml
+  mvc:
+    view:
+      prefix: classpath*:/templates/
+      suffix: .html
+    static-path-pattern: classpath*:/static/**
+  aop:
+    auto: true
+    proxy-target-class: true
+mybatis:
+  mapper-locations: classpath*:mapping/**/*.xml
+  type-aliases-package: com.hcframe.**.entity
+  configuration:
+    # 开启Sql日志记录
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+# 框架配置
+hcframe:
+  config:
+    # 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
+    isRedisLogin: false
+    # 用户登陆超时设置，单位为小时，此值不能为0
+    loginTimeout: 24
+    # 是否开启controller日志监控
+    showControllerLog: true
+    multi-data-source: false
+    cas: false
+# swagger配置
+swagger:
+  # 配置controller包路径
+  #  path: com.hcframe.module.**.controller
+  # 是否开启权限
+  enableAuth: true
+  # 用户名
+  username: admin
+  # 密码
+  password: admin
+# Druid连接配置
+druid:
+  # Druid用户名
+  username: test
+  # Druid密码
+  password: zxcasdaw
+  # Druid 允许访问的IP,默认全部允许
+  #  allow: 127.0.0.1
+  # Druid 拒绝访问的IP,默认不拒绝全部
+#  deny: 10.0.0.2
+management:
+  health:
+    redis:
+      enabled: false

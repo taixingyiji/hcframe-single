@@ -1,0 +1,46 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+log/logs
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+/lib/cpcn-payment-api-2.5.8.5.jar
+/lib/SADK-3.5.2.1.jar
+/lib/commons-codec-1.11.jar
+/lib/PKIBASE-1.0.jar
+/lib/InstitutionTools-v1.0.1.1-RELEASE.jar
+/lib/log4j.jar
+/lib/logback-4.1.1.0.jar
+logs
+hs_*

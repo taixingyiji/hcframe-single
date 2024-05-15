@@ -1,0 +1,118 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'org.springframework.boot' version '2.3.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'distribution'
+}
+
+group = 'com.taixingyiji'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+test.enabled(false)
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+def profileName = System.getProperty("profile") ?: "dev"
+
+distributions {
+    custom {
+        distributionBaseName = project.name
+        contents {
+            from 'build/prod'
+        }
+    }
+}
+processResources {
+    filter ReplaceTokens, tokens: [profileName: profileName]
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.github.penggle:kaptcha:2.3.2'
+    implementation 'org.apache.logging.log4j:log4j-api:2.17.0'
+    implementation 'org.apache.logging.log4j:log4j-to-slf4j:2.17.0'
+    implementation 'mysql:mysql-connector-java:5.1.46'
+    implementation 'tk.mybatis:mapper-spring-boot-starter:2.1.5'
+    implementation 'com.aventrix.jnanoid:jnanoid:2.0.0'
+    implementation('com.taixingyiji:hcframe-base:1.2.2-SNAPSHOT') {
+        exclude group: "mysql", module: "mysql-connector-java"
+        exclude group: "javax.mail" ,module: "mail"
+        exclude group: "cn.hutool", module: "hutool-all"
+        exclude group: "com.dm", module: "Dm7JdbcDriver"
+    }
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+    implementation 'com.taixingyiji:hcframe-boot-starter:1.0-SNAPSHOT'
+    implementation 'net.unicon.cas:cas-client-autoconfig-support:2.2.0-GA'
+//    implementation 'com.gitee.BTAJL:RCJava-core:2.0.1-SNAPSHOT'
+    developmentOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.jodd:jodd-http:5.1.4'
+    implementation 'redis.clients:jedis:2.9.0'
+    implementation 'cn.hutool:hutool-all:5.8.16'
+    implementation 'com.google.code.gson:gson:2.10.1'
+//    implementation 'com.dm:DmJdbcDriver18:1.8'
+    implementation 'org.latencyutils:LatencyUtils:2.0.3'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.taixingyiji.single.SingleServerApplication',
+                'Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join(' ')
+    }
+}
+
+tasks.register('copyJar', Copy) {
+    from configurations.compileClasspath
+    into('build/libs')
+}
+
+assemble.dependsOn(copyJar)
+jar.enabled(true)
+tasks.register('copyJarToProd', Copy) {
+    dependsOn(jar,copyJar)
+    from('build/libs')
+    into('build/prod/libs')
+}
+
+tasks.register('copyPemToProd', Copy) {
+    from('jks')
+    into('build/prod/jks')
+}
+
+tasks.register('copyScriptToProd', Copy) {
+    from('script')
+    into('build/prod')
+}
+
+tasks.register('copyConfToProd', Copy) {
+    from('conf')
+    into('build/prod/conf')
+}
+
+tasks.register('copyConfigToProd', Copy) {
+    from('yaml')
+    into('build/prod/config')
+}
+
+customDistTar.dependsOn(copyJarToProd,copyPemToProd,copyScriptToProd,copyConfigToProd,copyConfToProd)
+customDistZip.dependsOn(copyJarToProd,copyPemToProd,copyScriptToProd,copyConfigToProd,copyConfToProd)
