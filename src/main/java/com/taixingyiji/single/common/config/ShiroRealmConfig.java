@@ -53,8 +53,8 @@ public class ShiroRealmConfig implements SystemRealm {
      */
     @Override
     public Object findByUserId(String userId) {
-        Condition condition = Condition.creatCriteria().andEqual("ACCOUNT_ID", userId).build();
-        return baseMapper.selectByCondition("CROSS_ACCOUNT_INFO", condition);
+        Condition condition = Condition.creatCriteria().andEqual("USER_ID", userId).build();
+        return baseMapper.selectByCondition("FT_USER", condition);
 //        return baseMapper.selectByCondition("SG_OP_IDEN",condition);
     }
 

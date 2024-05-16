@@ -39,7 +39,7 @@ public class LoginController {
     }
 
     @PostMapping("rqLogin")
-//    @LoginAnno(operateType = "登录")
+    @LoginAnno(operateType = "登录")
     public ResultVO<Object> rqLogin(String loginName, String password) {
 //        return ResultVO.getSuccess();
         return loginService.rqLogin(loginName, password);

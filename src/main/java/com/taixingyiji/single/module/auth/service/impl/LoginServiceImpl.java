@@ -7,6 +7,7 @@ import com.taixingyiji.base.common.ResultVO;
 import com.taixingyiji.base.common.ServiceException;
 import com.taixingyiji.base.common.config.FrameConfig;
 import com.taixingyiji.base.common.utils.JudgeException;
+import com.taixingyiji.base.common.utils.MD5Util;
 import com.taixingyiji.base.common.utils.TokenProccessor;
 import com.taixingyiji.base.module.data.module.BaseMapper;
 import com.taixingyiji.base.module.data.module.BaseMapperImpl;
@@ -47,7 +48,7 @@ public class LoginServiceImpl implements LoginService {
     final WxClient wxClient;
 
     private static final String AN = "SG_OP_IDEN";
-    private static final String USER_TABLE = "RQ_OP_USER";
+    private static final String USER_TABLE = "FT_USER";
     private static final String ERR_MSG = "errmsg";
     private static final String ERR_CODE = "errcode";
     private static final int NO_CERT = 2;
@@ -83,15 +84,15 @@ public class LoginServiceImpl implements LoginService {
     public ResultVO rqLogin(String loginName, String password) {
         JudgeException.isNull(loginName, "登录名不能为空");
         JudgeException.isNull(password, "密码不能为空");
-        Map<String, Object> user = baseMapper.selectOneByCondition(USER_TABLE, Condition.creatCriteria().andEqual("CREDIT_CODE", loginName).build());
+        Map<String, Object> user = baseMapper.selectOneByCondition(USER_TABLE, Condition.creatCriteria().andEqual("USERNAME", loginName).build());
         if (user == null) {
             throw new ServiceException("用户不存在");
         } else {
             if (Integer.parseInt(String.valueOf(user.get("ENABLED"))) != 1) {
                 throw new ServiceException("用户已被禁用，请联系管理员");
             } else {
-//                if (MD5Util.isEqual(password, (String) user.get("PASSWORD"))) {
-                if (password.equals(user.get("PASSWORD"))) {
+                if (MD5Util.isEqual(password, (String) user.get("PASSWORD"))) {
+//                if (password.equals(user.get("PASSWORD"))) {
                     TokenProccessor tokenProccessor = TokenProccessor.getInstance();
                     //生成一个token
                     String token = tokenProccessor.makeToken();
