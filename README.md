@@ -1,7 +1,10 @@
 # HCFRAME-SINGLE 服务端
 
 ## windows使用Idea开发请设置编码
+
 打开IDEA-Help-Edit Custom VM Options 在其中添加一行 -Dfile.encoding=UTF-8
+
+> 注意：设置好后请重启IDEA
 
 ## 运行环境
 * java 1.8
