@@ -1,5 +1,12 @@
 # HCFRAME-SINGLE 服务端
 
+## 关于Maven本地仓库
+
+需要将maven配置文件（settings.xml）,放到如下目录下。
+
+`${USER}/.m2/settings.xml`
+
+
 ## windows使用Idea开发请设置编码
 
 打开IDEA-Help-Edit Custom VM Options 在其中添加一行 -Dfile.encoding=UTF-8
